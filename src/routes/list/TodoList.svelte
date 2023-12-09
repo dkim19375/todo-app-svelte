@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import TodoItem from './TodoItem.svelte';
 
 	export let todo_items: {
@@ -14,8 +13,10 @@
 	}
 
 	async function newTodoItemAddedEvent(event: CustomEvent) {
-		//console.log(`event called with todo_items: ${JSON.stringify(todo_items)}`);
-		//await last_todo_item.focus();
+		/* console.log(`event called with todo_items: ${JSON.stringify(todo_items)}`);
+		await tick();
+		console.log(`event DELAYED --- todo_items: ${JSON.stringify(todo_items)}`);
+		await last_todo_item.focus(); */
 	}
 
 	let last_update: {
@@ -23,7 +24,7 @@
 		content: string;
 	}[] = todo_items;
 
-	$: console.log(`last_todo_item: ${last_todo_item}`);
+	$: console.log(`last_todo_item: ${last_todo_item?.value()}`);
 
 	$: onUpdate(last_todo_item);
 
@@ -32,7 +33,7 @@
 	$: update_last_item(todo_items);
 
 	function update_last_item(todo_items: { id: number, content: string | null }[]) {
-		console.log(`Updating last item`);
+		console.log(`Updating last item, todo_items: ${JSON.stringify(todo_items)}`);
 		last_todo_item_data = {
 			id:
 				todo_items.length == 0
@@ -61,6 +62,7 @@
 	<TodoItem
 		todo_item={last_todo_item_data}
 		new_todo_item_added_event={handleNewTodoItemAdded}
+		is_last={true}
 		bind:this={last_todo_item}
 		on:newTodoItemAddedEvent={newTodoItemAddedEvent}
 	/>

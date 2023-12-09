@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import { error, type SubmitFunction } from '@sveltejs/kit';
 	import { createEventDispatcher, onMount, tick } from 'svelte';
 
@@ -9,6 +10,8 @@
 	};
 
 	export let new_todo_item_added_event: () => Promise<void>;
+
+	export let is_last: boolean = false;
 
 	let input_element: HTMLInputElement;
 
@@ -64,7 +67,18 @@
 	action="?/addTodoItem"
 	method="POST"
 >
+	{#if is_last}
 	<input
+		bind:this={input_element}
+		type="text"
+		name="todo_item"
+		class="w-full py-3 pl-5 m-[0.4rem] text-2xl transition-colors outline-none bg-slate-600 rounded-xl text-slate-200 focus:bg-slate-500"
+		value={todo_item.content || ''}
+		spellcheck="false"
+		on:blur={handleFocusOut}
+	/>
+	{:else}
+		<input
 		bind:this={input_element}
 		type="text"
 		name="todo_item"
@@ -73,4 +87,5 @@
 		spellcheck="false"
 		on:blur={handleFocusOut}
 	/>
+	{/if}
 </form>
